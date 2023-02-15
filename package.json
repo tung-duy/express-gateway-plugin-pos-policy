@@ -1,0 +1,15 @@
+{
+  "name": "pos-policy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "manifest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tungduy <tungduy.dev@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  }
+}
