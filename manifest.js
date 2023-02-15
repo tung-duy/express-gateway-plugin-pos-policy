@@ -12,7 +12,7 @@ module.exports = {
         express.urlencoded({ extended: true })
       ];
       app.use(logger('dev'));
-      app.use([health]);
+      // app.use([health]);
       app.use('/api-gateway', middlewares, require('./routes'));
       app.use(function (output, req, res, next) {
         const { result, tracing } = req;
