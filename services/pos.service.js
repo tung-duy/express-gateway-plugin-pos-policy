@@ -1,8 +1,8 @@
-const { getModel, sequelize } = require('@db');
-const Server = getModel({ model: 'Server' });
-
 module.exports = {
   getClusterInfo: async ({ headers, url, user }, res) => {
+    const { getModel, sequelize } = global;
+    const Server = getModel({ model: 'Server' });
+
     const public_path = url.trim().split('/');
     console.log(
       '🚀 ~ file: pos.service.js:4 ~ getClusterInfo: ~ public_path',
