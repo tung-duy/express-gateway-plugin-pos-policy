@@ -6,7 +6,6 @@ module.exports = {
   policy: (actionParams) => {
     return async (req, res, next) => {
       console.log('-------------------req.user', req.user);
-      console.log('-------------------req.headers', req.headers);
 
       const info = await getClusterInfo(req, res);
 
@@ -18,7 +17,7 @@ module.exports = {
 
       const proxy = httpProxy.createProxyServer({ changeOrigin: true });
       proxy.on('error', (error, req, res) => {
-        console.log(`${target} - error:`, error);
+        console.log(`${info.target} - error:`, error);
 
         if (!res.headersSent) {
           res.status(502).send('Bad gateway.');
@@ -27,7 +26,7 @@ module.exports = {
         }
       });
 
-      proxy.web(req, res, { target });
+      proxy.web(req, res, { target: info.target });
     };
   }
 };
