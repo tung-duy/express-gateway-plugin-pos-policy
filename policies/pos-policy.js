@@ -5,8 +5,6 @@ module.exports = {
   name: 'pos-policy',
   policy: (actionParams) => {
     return async (req, res, next) => {
-      console.log('-------------------req.user', req.user);
-
       const info = await getClusterInfo(req, res);
 
       if (!info.status) {

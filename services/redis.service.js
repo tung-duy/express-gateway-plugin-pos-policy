@@ -1,16 +1,15 @@
 // const { Redis } = require('@fwork/backend-helper');
 
-function setCompanyServer(companyId, serviceName, server) {
+function setServerRedis(shopId, shopName, server) {
   const value = JSON.stringify({
-    name: server.name,
-    port: server.port
+    ip: server.ip
   });
-  const key = `${companyId}_${serviceName}`;
-  Redis.set(key, value);
+  const key = `${shopId}_${shopName}`;
+  global.redis.set(key, value);
 }
 
-// async function getCompanyServer(companyId, serviceName) {
-//   const valueRedis = await getCompanyServerRedis(companyId, serviceName);
+// async function getCompanyServer(shopId, shopName) {
+//   const valueRedis = await getServerRedis(shopId, shopName);
 //   console.log('valueRedis: ', valueRedis);
 
 //   if (valueRedis && valueRedis.name && valueRedis.port) {
@@ -19,12 +18,12 @@ function setCompanyServer(companyId, serviceName, server) {
 
 //   const ServerModel = await global.clientConnection.model('Server');
 //   const CompanyServerModel = await global.clientConnection.model(
-//     'CompanyServer',
+//     'CompanyServer'
 //   );
 
 //   const companyServer = await CompanyServerModel.findOne({
-//     companyId,
-//     serviceName,
+//     shopId,
+//     shopName
 //   });
 //   console.log('companyServer: ', companyServer);
 
@@ -35,17 +34,53 @@ function setCompanyServer(companyId, serviceName, server) {
 //   if (!server) {
 //     return null;
 //   }
-//   setCompanyServer(companyId, serviceName, server);
+//   setServerRedis(shopId, shopName, server);
 //   return {
 //     name: server.name,
-//     port: server.port,
+//     port: server.port
 //   };
 // }
 
-// async function getCompanyServerRedis(companyId, serviceName) {
+async function getServerRedis(shopId, shopName) {
+  const { getModel, redis } = global;
+
+  const Server = getModel({ model: 'Server' });
+
+  return new Promise(function (resolve, reject) {
+    const key = `${shopId}_${shopName}`;
+    redis.get(key, async function (err, value) {
+      if (value) {
+        return resolve({
+          success: true,
+          target: JSON.parse(value)
+        });
+      }
+      const clusterInfo = await Server.findOne({
+        where: { id: user.shop.serverId },
+        raw: true
+      });
+      if (!clusterInfo)
+        return resolve({
+          success: false,
+          ms: `${user.shop.name} is not available`,
+          target: null
+        });
+      const value = JSON.stringify({
+        ip: server.ip
+      });
+      const key = `${shopId}_${shopName}`;
+      redis.set(key, value);
+      return resolve({
+        success: true,
+        target: { ip: server.ip }
+      });
+    });
+  });
+}
+
+// async function getServiceRedis(public_path) {
 //   return new Promise(function (resolve, reject) {
-//     const key = `${companyId}_${serviceName}`;
-//     Redis.get(key, function (err, value) {
+//     Redis.get(public_path, function (err, value) {
 //       if (value) {
 //         return resolve(JSON.parse(value));
 //       }
@@ -54,18 +89,7 @@ function setCompanyServer(companyId, serviceName, server) {
 //   });
 // }
 
-async function getServiceRedis(public_path) {
-  return new Promise(function (resolve, reject) {
-    Redis.get(public_path, function (err, value) {
-      if (value) {
-        return resolve(JSON.parse(value));
-      }
-      resolve(null);
-    });
-  });
-}
-
 module.exports = {
-  setCompanyServer,
-  getServiceRedis
+  setServerRedis,
+  getServerRedis
 };
