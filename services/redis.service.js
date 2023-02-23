@@ -65,11 +65,11 @@ async function getServerRedis(shopId, shopName) {
           ms: `${user.shop.name} is not available`,
           target: null
         });
-      const value = JSON.stringify({
+      const newData = JSON.stringify({
         ip: server.ip
       });
       const key = `${shopId}_${shopName}`;
-      redis.set(key, value);
+      redis.set(key, newData);
       return resolve({
         success: true,
         target: { ip: server.ip }
