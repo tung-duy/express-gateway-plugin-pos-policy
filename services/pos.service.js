@@ -11,7 +11,11 @@ module.exports = {
     const pub_key =
       `/${public_path[1]}/${public_path[2]}/${public_path[3]}`.split('?')[0];
 
-    const clusterInfo = await getServerRedis(user.shop.id, user.shop.name);
+    const clusterInfo = await getServerRedis(
+      user.shop.id,
+      user.shop.name,
+      user.shop.serverId
+    );
     if (!clusterInfo.success) return clusterInfo;
 
     return {

@@ -41,7 +41,7 @@ function setServerRedis(shopId, shopName, server) {
 //   };
 // }
 
-async function getServerRedis(shopId, shopName) {
+async function getServerRedis(shopId, shopName, serverId) {
   const { getModel, redis } = global;
 
   const Server = getModel({ model: 'Server' });
@@ -56,23 +56,23 @@ async function getServerRedis(shopId, shopName) {
         });
       }
       const clusterInfo = await Server.findOne({
-        where: { id: user.shop.serverId },
+        where: { id: serverId },
         raw: true
       });
       if (!clusterInfo)
         return resolve({
           success: false,
-          ms: `${user.shop.name} is not available`,
+          ms: `${shopName} is not available`,
           target: null
         });
       const newData = JSON.stringify({
-        ip: server.ip
+        ip: clusterInfo.ip
       });
       const key = `${shopId}_${shopName}`;
       redis.set(key, newData);
       return resolve({
         success: true,
-        target: { ip: server.ip }
+        target: { ip: clusterInfo.ip }
       });
     });
   });
