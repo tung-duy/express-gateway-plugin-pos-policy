@@ -76,7 +76,7 @@ async function getServerRedis(shopId, shopName, serverId) {
       redis.set(key, newData);
       return resolve({
         success: true,
-        target: { ip: clusterInfo.ip, port: clusterInfo.posBePort }
+        target: { ip: clusterInfo.ip, posBePort: clusterInfo.posBePort }
       });
     });
   });

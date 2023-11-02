@@ -21,7 +21,7 @@ module.exports = {
     return {
       status: true,
       message: 'get tenant success',
-      target: `http://${clusterInfo.target.ip}:${clusterInfo.target.port}`
+      target: `http://${clusterInfo.target.ip}:${clusterInfo.target.posBePort}`
     };
   }
 };
