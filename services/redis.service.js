@@ -66,13 +66,17 @@ async function getServerRedis(shopId, shopName, serverId) {
           target: null
         });
       const newData = JSON.stringify({
-        ip: clusterInfo.ip
+        ip: clusterInfo.ip,
+        ip_db: clusterInfo.ip_db,
+        posBePort: clusterInfo.posBePort,
+        ldBePort: clusterInfo.ldBePort,
+        salesBePort: clusterInfo.salesBePort
       });
       const key = `${shopId}_${shopName}`;
       redis.set(key, newData);
       return resolve({
         success: true,
-        target: { ip: clusterInfo.ip }
+        target: { ip: clusterInfo.ip, port: clusterInfo.posBePort }
       });
     });
   });
