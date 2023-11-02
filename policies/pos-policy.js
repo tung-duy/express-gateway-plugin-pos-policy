@@ -1,4 +1,6 @@
 const httpProxy = require('http-proxy');
+const streamify = require('stream-array');
+
 const { getClusterInfo } = require('../services/pos.service');
 
 module.exports = {
