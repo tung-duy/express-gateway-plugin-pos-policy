@@ -8,6 +8,7 @@ module.exports = {
     pluginContext.registerCondition(require('./conditions/url-match'));
     pluginContext.registerPolicy(require('./policies/my-policy'));
     pluginContext.registerPolicy(require('./policies/pos-policy'));
+    pluginContext.registerPolicy(require('./policies/sales-policy'));
     pluginContext.registerGatewayRoute((app) => {
       const middlewares = [
         express.json(),
