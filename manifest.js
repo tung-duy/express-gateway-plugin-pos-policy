@@ -84,7 +84,7 @@ module.exports = {
       console.log('admin ready');
     });
   },
-  policies: ['my-policy', 'pos-policy'], // this is for CLI to automatically add to "policies" whitelist in gateway.config
+  policies: ['my-policy', 'pos-policy', 'sales-policy'], // this is for CLI to automatically add to "policies" whitelist in gateway.config
   options: {
     // This is for CLI to ask about params 'eg plugin configure example'
     baseUrl: {
