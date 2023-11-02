@@ -1,12 +1,12 @@
 const httpProxy = require('http-proxy');
 
-const { getClusterInfo } = require('../services/pos.service');
+const { getSalesClusterInfo } = require('../services/pos.service');
 
 module.exports = {
   name: 'sales-policy',
   policy: (actionParams) => {
     return async (req, res, next) => {
-      const info = await getClusterInfo(req, res);
+      const info = await getSalesClusterInfo(req, res);
 
       if (!info.status) {
         return res.status(404).json({
