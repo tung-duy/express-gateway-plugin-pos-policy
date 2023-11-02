@@ -1,5 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
+const cors = require('cors');
 
 module.exports = {
   version: '1.2.0',
@@ -13,6 +14,7 @@ module.exports = {
         express.urlencoded({ extended: true })
       ];
       app.use(logger('dev'));
+      app.use(cors());
       // app.use([health]);
       app.use('/api-gateway', middlewares, require('./routes'));
       app.use(function (output, req, res, next) {
