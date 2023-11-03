@@ -4,7 +4,7 @@ function setServerRedis(shopId, shopName, server) {
   const value = JSON.stringify({
     ip: server.ip
   });
-  const key = `${shopId}_${shopName}`;
+  const key = `db_${shopName}`;
   global.redis.set(key, value);
 }
 
@@ -47,7 +47,7 @@ async function getServerRedis(shopId, shopName, serverId) {
   const Server = getModel({ model: 'Server' });
 
   return new Promise(function (resolve, reject) {
-    const key = `${shopId}_${shopName}`;
+    const key = `db_${shopName}`;
     redis.get(key, async function (err, value) {
       if (value) {
         return resolve({
@@ -72,7 +72,59 @@ async function getServerRedis(shopId, shopName, serverId) {
         ldBePort: clusterInfo.ldBePort,
         salesBePort: clusterInfo.salesBePort
       });
-      const key = `${shopId}_${shopName}`;
+      const key = `db_${shopName}`;
+      redis.set(key, newData);
+      return resolve({
+        success: true,
+        target: { ip: clusterInfo.ip, posBePort: clusterInfo.posBePort }
+      });
+    });
+  });
+}
+
+async function getServerBySubdomain(subdomain) {
+  const { getModel, redis } = global;
+
+  const Shop = getModel({ model: 'Shop' });
+
+  return new Promise(function (resolve, reject) {
+    const key = `db_${subdomain}`;
+    redis.get(key, async function (err, value) {
+      if (value) {
+        return resolve({
+          success: true,
+          target: JSON.parse(value)
+        });
+      }
+      const shopInfo = await Shop.findOne({
+        where: { subdomain },
+        raw: true
+      });
+
+      if (!shopInfo)
+        return resolve({
+          success: false,
+          ms: `${subdomain} is not available`,
+          target: null
+        });
+      const clusterInfo = await Server.findOne({
+        where: { id: shopInfo.serverId },
+        raw: true
+      });
+      if (!clusterInfo)
+        return resolve({
+          success: false,
+          ms: `${subdomain} is not available`,
+          target: null
+        });
+      const newData = JSON.stringify({
+        ip: clusterInfo.ip,
+        ip_db: clusterInfo.ip_db,
+        posBePort: clusterInfo.posBePort,
+        ldBePort: clusterInfo.ldBePort,
+        salesBePort: clusterInfo.salesBePort
+      });
+      const key = `db_${subdomain}`;
       redis.set(key, newData);
       return resolve({
         success: true,
@@ -95,5 +147,6 @@ async function getServerRedis(shopId, shopName, serverId) {
 
 module.exports = {
   setServerRedis,
-  getServerRedis
+  getServerRedis,
+  getServerBySubdomain
 };

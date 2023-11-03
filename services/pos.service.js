@@ -1,4 +1,4 @@
-const { getServerRedis } = require('./redis.service');
+const { getServerRedis, getServerBySubdomain } = require('./redis.service');
 
 module.exports = {
   getClusterInfo: async ({ headers, url, user }, res) => {
@@ -16,7 +16,11 @@ module.exports = {
     };
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
-    console.log("🚀 ~ file: pos.service.js:19 ~ getSalesClusterInfo: ~ headers:", headers)
+    const { hostname } = new URL(headers.origin);
+    const parts = hostname.split('.');
+    const subdomain = parts[0] || '';
+
+    const clusterInfo = await getServerBySubdomain(subdomain)
     // const clusterInfo = await getServerRedis(
     //   user.shop.id,
     //   user.shop.name,
