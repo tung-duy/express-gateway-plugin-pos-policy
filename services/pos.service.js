@@ -2,6 +2,13 @@ const { getServerRedis, getServerBySubdomain } = require('./redis.service');
 
 module.exports = {
   getClusterInfo: async ({ headers, url, user }, res) => {
+    if (!user.shop) {
+      return {
+        success: false,
+        message: `${user.email} has not updated shop information`,
+        target: null
+      }
+    }
     const clusterInfo = await getServerRedis(
       user.shop.id,
       user.shop.name,

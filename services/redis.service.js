@@ -62,7 +62,7 @@ async function getServerRedis(shopId, shopName, serverId) {
       if (!clusterInfo)
         return resolve({
           success: false,
-          ms: `${shopName} is not available`,
+          message: `${shopName} is not available`,
           target: null
         });
       const newData = JSON.stringify({
@@ -87,7 +87,7 @@ async function getServerBySubdomain(subdomain) {
 
   const Shop = getModel({ model: 'Shop' });
   const Server = getModel({ model: 'Server' });
-  
+
   return new Promise(function (resolve, reject) {
     const key = `db_${subdomain}`;
     redis.get(key, async function (err, value) {
@@ -105,7 +105,7 @@ async function getServerBySubdomain(subdomain) {
       if (!shopInfo)
         return resolve({
           success: false,
-          ms: `${subdomain} is not available`,
+          message: `${subdomain} is not available`,
           target: null
         });
       const clusterInfo = await Server.findOne({
@@ -115,7 +115,7 @@ async function getServerBySubdomain(subdomain) {
       if (!clusterInfo)
         return resolve({
           success: false,
-          ms: `${subdomain} is not available`,
+          message: `${subdomain} is not available`,
           target: null
         });
       const newData = JSON.stringify({
