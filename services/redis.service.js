@@ -86,7 +86,8 @@ async function getServerBySubdomain(subdomain) {
   const { getModel, redis } = global;
 
   const Shop = getModel({ model: 'Shop' });
-
+  const Server = getModel({ model: 'Server' });
+  
   return new Promise(function (resolve, reject) {
     const key = `db_${subdomain}`;
     redis.get(key, async function (err, value) {
