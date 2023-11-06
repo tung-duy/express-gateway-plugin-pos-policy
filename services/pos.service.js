@@ -24,7 +24,7 @@ module.exports = {
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
     try {
-      if (!headers?.origin || !headers?.referer) {
+      if (!headers?.origin && !headers?.referer) {
         return {
           success: false,
           message: `Headers is invalid`,
