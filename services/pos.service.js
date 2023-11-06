@@ -30,7 +30,7 @@ module.exports = {
           message: `Headers is invalid`,
         }
       }
-      const { hostname } = new URL(headers?.origin);
+      const { hostname } = new URL(headers?.origin) || new URL(headers?.referer);
       const parts = hostname?.split('.');
       const subdomain = parts[0] || '';
       const clusterInfo = await getServerBySubdomain(subdomain)
