@@ -24,13 +24,13 @@ module.exports = {
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
     try {
-      if (!headers?.origin && !headers?.referer) {
+      if (!headers?.referer) {
         return {
           success: false,
           message: `Headers is invalid`,
         }
       }
-      const { hostname } = new URL(headers?.origin) || new URL(headers?.referer);
+      const { hostname } = new URL(headers?.referer);
       const parts = hostname?.split('.');
       const subdomain = parts[0] || '';
       const clusterInfo = await getServerBySubdomain(subdomain)
