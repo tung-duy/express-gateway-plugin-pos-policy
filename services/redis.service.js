@@ -1,7 +1,7 @@
 async function getServerRedis({ subdomain, serverId = null }) {
   try {
     const dbKey = `db_${subdomain}`;
-    const serverKey = `server_${serverId}`;
+    let serverKey = `server_${serverId}`;
     const dbData = await redis.get(dbKey);
     if (dbData) {
       return {
@@ -30,6 +30,7 @@ async function getServerRedis({ subdomain, serverId = null }) {
           };
         }
         id = shopInfo.serverId
+        serverKey = `server_${id}`;
       }
       const clusterInfo = await Server.findOne({
         where: { id },
