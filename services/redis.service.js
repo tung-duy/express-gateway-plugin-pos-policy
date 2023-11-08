@@ -14,8 +14,25 @@ async function getServerRedis({ subdomain, serverId }) {
     if (!serverDataInfo) {
       const { getModel, redis } = global;
       const Server = getModel({ model: "Server" });
+      let id = serverId
+      if (!id) {
+        const Shop = getModel({ model: "Shop" });
+        const shopInfo = await Shop.findOne({
+          where: { subdomain },
+          raw: true,
+        });
+  
+        if (!shopInfo) {
+          return {
+            success: false,
+            message: `${subdomain} is not available`,
+            target: null,
+          };
+        }
+        id = shopInfo.serverId
+      }
       const clusterInfo = await Server.findOne({
-        where: { id: serverId },
+        where: { id },
         raw: true,
       });
       if (!clusterInfo) {
