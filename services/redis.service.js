@@ -1,4 +1,4 @@
-async function getServerRedis({ subdomain, serverId }) {
+async function getServerRedis({ subdomain, serverId = null }) {
   try {
     const dbKey = `db_${subdomain}`;
     const serverKey = `server_${serverId}`;
@@ -53,7 +53,7 @@ async function getServerRedis({ subdomain, serverId }) {
       newDbData.destination = serverDataInfo.destination
       newDbData.port = serverDataInfo.port
     }
-    redis.set(dbKey, stringify(newDbData));
+    redis.set(dbKey, JSON.stringify(newDbData));
     
     return { success: true };
   } catch (err) {
