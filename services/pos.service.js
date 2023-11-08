@@ -11,13 +11,13 @@ module.exports = {
     }
     const clusterInfo = await getServerRedis({ subdomain: user.shop.name, serverId: user.shop.serverId });
     if (!clusterInfo.success) return clusterInfo;
-    const service = await getServicesByCode(POS_BACKEND);
-    if (!service.success) return service;
+    const data = await getServicesByCode(POS_BACKEND);
+    if (!data.success) return data;
     
     return {
       status: true,
       message: 'get tenant success',
-      target: `http://${service.đata.destination}:${service.data.port}`
+      target: `http://${data.service.destination}:${data.service.port}`
     };
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
