@@ -53,7 +53,7 @@ async function getServerRedis({ subdomain, serverId }) {
       newDbData.destination = serverDataInfo.destination
       newDbData.port = serverDataInfo.port
     }
-    redis.set(dbKey, newDbData);
+    redis.set(dbKey, stringify(newDbData));
     
     return { success: true };
   } catch (err) {
