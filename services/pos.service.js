@@ -1,5 +1,5 @@
-const { getServerRedis, getServerBySubdomain } = require('./redis.service');
-
+const { getServerRedis, getServerBySubdomain, getServicesByCode } = require('./redis.service');
+const { POS_BACKEND } = require('../constants');
 module.exports = {
   getClusterInfo: async ({ headers, url, user }, res) => {
     if (!user.shop) {
@@ -9,17 +9,15 @@ module.exports = {
         target: null
       }
     }
-    const clusterInfo = await getServerRedis(
-      user.shop.id,
-      user.shop.name,
-      user.shop.serverId
-    );
+    const clusterInfo = await getServerRedis({ subdomain: user.shop.name, serverId: user.shop.serverId });
     if (!clusterInfo.success) return clusterInfo;
-
+    const service = await getServicesByCode(POS_BACKEND);
+    if (!service.success) return service;
+    
     return {
       status: true,
       message: 'get tenant success',
-      target: `http://${clusterInfo.target.ip}:${clusterInfo.target.posBePort}`
+      target: `http://${service.đata.destination}:${service.data.port}`
     };
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
