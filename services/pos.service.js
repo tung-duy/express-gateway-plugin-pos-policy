@@ -9,7 +9,7 @@ module.exports = {
         target: null
       }
     }
-    const clusterInfo = await getServerRedis({ subdomain: user.shop.name, serverId: user.shop.serverId });
+    const clusterInfo = await getServerRedis({ subdomain: user.shop.subdomain, serverId: user.shop.serverId });
     if (!clusterInfo.success) return clusterInfo;
     const data = await getServicesByCode(POS_BACKEND);
     if (!data.success) return data;
@@ -22,16 +22,24 @@ module.exports = {
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
     try {
-      if (!headers?.referer) {
+      if (!url.length) {
         return {
           success: false,
-          message: `Headers is invalid`,
+          message: `URL is invalid`,
         }
       }
-      const { hostname } = new URL(headers?.referer);
-      const parts = hostname?.split('.');
-      const subdomain = parts[0] || '';
-      const clusterInfo = await getServerRedis({ subdomain });
+
+      const segments = url.split("/");
+      const prefix = segments[1]
+      if (typeof prefix == 'undefined') {
+        return {
+          success: false,
+          message: `Path is invalid`,
+        }
+      }
+      const firstVariable = prefix.length > 1 ? segments[1] : "/";
+
+      const clusterInfo = await getServerRedis({ subdomain: firstVariable });
       console.log("🚀 ~ file: pos.service.js:24 ~ getSalesClusterInfo: ~ clusterInfo:", clusterInfo)
       if (!clusterInfo.success) return clusterInfo;
 

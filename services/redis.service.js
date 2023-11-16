@@ -51,8 +51,8 @@ async function getServerRedis({ subdomain, serverId = null }) {
       newDbData.destination = clusterInfo.destination
       newDbData.port = clusterInfo.port
     } else {
-      newDbData.destination = serverDataInfo.destination
-      newDbData.port = serverDataInfo.port
+      newDbData.destination = JSON.parse(serverDataInfo).destination
+      newDbData.port = JSON.parse(serverDataInfo).port
     }
     redis.set(dbKey, JSON.stringify(newDbData));
     

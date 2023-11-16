@@ -9,7 +9,7 @@ module.exports = {
       const info = await getClusterInfo(req, res);
 
       if (!info.status) {
-        return res.status(404).json({
+        return res.status(401).json({
           message: info.message
         });
       }
