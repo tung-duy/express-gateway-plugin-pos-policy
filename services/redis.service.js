@@ -161,9 +161,46 @@ async function getServerBySubdomain(subdomain) {
     });
   });
 }
+const getServerBySuffix = async ({ suffix }) => {
+  const dbKey = `sale_${suffix}`
+  const dbData = await redis.get(dbKey);
+  if (dbData) {
+    return {
+      success: true,
+      target: JSON.parse(dbData),
+    };
+  }
+
+  try {
+    const { getModel, redis } = global;
+    const ShopHasSubdomainModel = getModel({ model: "ShopHasSubdomain" });
+    const ShopModel = getModel({ model: 'Shop'});
+    const data = await ShopHasSubdomainModel.findOne({
+      where: {
+        subdomain: suffix
+      },
+      include: ShopModel
+    })
+    console.log("🚀 ~ file: redis.service.js:184 ~ getServerBySuffix ~ data:", data)
+    if (!data) {
+      return {
+        success: false,
+        message: `${suffix} not found`
+      }
+    }
+    
+  } catch (err) {
+    console.log("🚀 ~ file: redis.service.js:177 ~ getServerBySuffix ~ err:", err)
+    return {
+      success: false,
+      message: `Get sale information failed`
+    };
+  }
+}
 
 module.exports = {
   getServerRedis,
   getServerBySubdomain,
-  getServicesByCode
+  getServicesByCode,
+  getServerBySuffix
 };

@@ -1,4 +1,4 @@
-const { getServerRedis, getServerBySubdomain, getServicesByCode } = require('./redis.service');
+const { getServerRedis, getServerBySuffix, getServicesByCode } = require('./redis.service');
 const { POS_BACKEND, POS_SALES_BACKEND } = require('../constants');
 module.exports = {
   getClusterInfo: async ({ headers, url, user }, res) => {
@@ -30,16 +30,17 @@ module.exports = {
       }
 
       const segments = url.split("/");
-      const prefix = segments[1]
-      if (typeof prefix == 'undefined') {
+      const suffix = segments[1]
+      if (typeof suffix == 'undefined') {
         return {
           success: false,
           message: `Path is invalid`,
         }
       }
-      const firstVariable = prefix.length > 1 ? segments[1] : "/";
+      const firstVariable = suffix.length > 1 ? segments[1] : "/";
 
-      const clusterInfo = await getServerRedis({ subdomain: firstVariable });
+      const clusterInfo = await getServerBySuffix({ suffix: firstVariable });
+
       console.log("🚀 ~ file: pos.service.js:24 ~ getSalesClusterInfo: ~ clusterInfo:", clusterInfo)
       if (!clusterInfo.success) return clusterInfo;
 
