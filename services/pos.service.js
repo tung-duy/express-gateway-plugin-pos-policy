@@ -41,16 +41,12 @@ module.exports = {
 
       const clusterInfo = await getServerBySuffix({ suffix: firstVariable });
 
-      console.log("🚀 ~ file: pos.service.js:24 ~ getSalesClusterInfo: ~ clusterInfo:", clusterInfo)
       if (!clusterInfo.success) return clusterInfo;
-
-      const data = await getServicesByCode(POS_SALES_BACKEND);
-      if (!data.success) return data;
 
       return {
         status: true,
         message: 'get tenant success',
-        target: `http://${data.service.destination}:${data.service.port}`
+        target: `http://${clusterInfo.service.destination}:${clusterInfo.service.port}`
       };
     } catch (err) {
       return {

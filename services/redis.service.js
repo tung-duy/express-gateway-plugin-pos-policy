@@ -175,20 +175,51 @@ const getServerBySuffix = async ({ suffix }) => {
     const { getModel, redis } = global;
     const ShopHasSubdomainModel = getModel({ model: "ShopHasSubdomain" });
     const ShopModel = getModel({ model: 'Shop'});
+    const Server = getModel({ model: 'Server'});
+    const Service = getModel({ model: 'Service'});
+
     const data = await ShopHasSubdomainModel.findOne({
       where: {
         subdomain: suffix
       },
-      include: ShopModel
+      include: [{
+        model: ShopModel,
+        as: 'shop',
+        include: {
+          model: Server,
+          as: 'server'
+        },
+        
+      },
+      {
+        model: Service,
+        as: 'service'
+      }
+    ],
+      raw: true
     })
-    console.log("🚀 ~ file: redis.service.js:184 ~ getServerBySuffix ~ data:", data)
     if (!data) {
       return {
         success: false,
         message: `${suffix} not found`
       }
     }
-    
+    const newData = {
+      shop: {
+        dbName: data['shop.subdomain'],
+        destination: data['shop.server.destination'],
+        port: data['shop.server.port'],
+      },
+      type: data.storeType,
+      service: {
+        code: data['service.code'],
+        destination: data['service.destination'],
+        port: data['service.port']
+      }
+    }
+    redis.set(dbKey, JSON.stringify(newData));
+
+    return { success: true, ...newData };
   } catch (err) {
     console.log("🚀 ~ file: redis.service.js:177 ~ getServerBySuffix ~ err:", err)
     return {
