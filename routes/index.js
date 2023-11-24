@@ -6,7 +6,7 @@ router.get('/ping', (req, res, next) => {
   res.json({ name: 'API Gateway service are running...', ping: 'PONG as' });
 });
 
-router.get('/:domain', async (req, res, next) => {
+router.get('/:suffix', async (req, res, next) => {
   try {
     const { suffix } = req.params
 
@@ -20,7 +20,7 @@ router.get('/:domain', async (req, res, next) => {
     const clusterInfo = await getServerBySuffix({ suffix });
 
     if (!clusterInfo.success) return next(clusterInfo);
-    
+
     return res.json({
       success: clusterInfo.success,
       shop: clusterInfo.shop.dbName,
