@@ -22,24 +22,15 @@ module.exports = {
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
     try {
-      if (!url.length) {
+      const { suffix } = req.headers
+      if (!suffix) {
         return {
           success: false,
-          message: `URL is invalid`,
+          message: `Header is invalid`,
         }
       }
 
-      const segments = url.split("/");
-      const suffix = segments[1]
-      if (typeof suffix == 'undefined') {
-        return {
-          success: false,
-          message: `Path is invalid`,
-        }
-      }
-      const firstVariable = suffix.length > 1 ? segments[1] : "/";
-
-      const clusterInfo = await getServerBySuffix({ suffix: firstVariable });
+      const clusterInfo = await getServerBySuffix({ suffix });
 
       if (!clusterInfo.success) return clusterInfo;
 
