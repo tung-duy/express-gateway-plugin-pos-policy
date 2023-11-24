@@ -22,7 +22,7 @@ module.exports = {
   },
   getSalesClusterInfo: async ({ headers, url, user }, res) => {
     try {
-      const { suffix } = req.headers
+      const { suffix } = headers
       if (!suffix) {
         return {
           success: false,
@@ -40,6 +40,7 @@ module.exports = {
         target: `http://${clusterInfo.service.destination}:${clusterInfo.service.port}`
       };
     } catch (err) {
+      console.log("🚀 ~ file: pos.service.js:43 ~ getSalesClusterInfo: ~ err:", err)
       return {
         success: false,
         message: `Request is invalid`,
