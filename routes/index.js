@@ -24,7 +24,8 @@ router.get('/:suffix', async (req, res, next) => {
     return res.json({
       success: clusterInfo.success,
       shop: clusterInfo.shop.dbName,
-      type: clusterInfo.type
+      type: clusterInfo.type,
+      suffix
     });
   } catch (err) {
     console.log("🚀 ~ file: index.js:32 ~ router.get ~ err:", err)
