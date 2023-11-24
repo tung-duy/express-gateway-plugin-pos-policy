@@ -167,7 +167,7 @@ const getServerBySuffix = async ({ suffix }) => {
   if (dbData) {
     return {
       success: true,
-      target: JSON.parse(dbData),
+      ...JSON.parse(dbData),
     };
   }
 
