@@ -6,29 +6,26 @@ router.get('/ping', (req, res, next) => {
   res.json({ name: 'API Gateway service are running...', ping: 'PONG as' });
 });
 
-router.get('/domain', async (req, res, next) => {
+router.get('/:domain', async (req, res, next) => {
   try {
-    if (!url.length) {
-      return {
+    const { suffix } = req.params
+
+    if (!suffix) {
+      return next({
         success: false,
-        message: `URL is invalid`,
-      }
+        message: `Suffix is invalid`,
+      })
     }
 
-    const segments = url.split("/");
-    const suffix = segments[1]
-    if (typeof suffix == 'undefined') {
-      return {
-        success: false,
-        message: `Path is invalid`,
-      }
-    }
-    const firstVariable = suffix.length > 1 ? segments[1] : "/";
+    const clusterInfo = await getServerBySuffix({ suffix });
 
-    const clusterInfo = await getServerBySuffix({ suffix: firstVariable });
-
-    if (!clusterInfo.success) return clusterInfo;
-
+    if (!clusterInfo.success) return next(clusterInfo);
+    
+    return res.json({
+      success: clusterInfo.success,
+      shop: clusterInfo.shop.dbName,
+      type: clusterInfo.type
+    });
   } catch (err) {
     console.log("🚀 ~ file: index.js:32 ~ router.get ~ err:", err)
     return next(err)
