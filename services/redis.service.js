@@ -1,5 +1,6 @@
 async function getServerRedis({ subdomain, serverId = null }) {
   try {
+    const { getModel, redis } = global;
     const dbKey = `db_${subdomain}`;
     let serverKey = `server_${serverId}`;
     const dbData = await redis.get(dbKey);
@@ -12,7 +13,6 @@ async function getServerRedis({ subdomain, serverId = null }) {
     const serverDataInfo = await redis.get(serverKey);
     const newDbData = {}
     if (!serverDataInfo) {
-      const { getModel, redis } = global;
       const Server = getModel({ model: "Server" });
       let id = serverId
       if (!id) {

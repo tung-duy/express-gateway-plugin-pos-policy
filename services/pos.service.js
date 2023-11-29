@@ -31,6 +31,7 @@ module.exports = {
       }
 
       const clusterInfo = await getServerBySuffix({ suffix });
+      console.log("🚀 ~ file: pos.service.js:34 ~ getSalesClusterInfo: ~ clusterInfo:", clusterInfo)
 
       if (!clusterInfo.success) return clusterInfo;
 
