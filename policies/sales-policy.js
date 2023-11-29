@@ -6,7 +6,9 @@ module.exports = {
   name: 'sales-policy',
   policy: (actionParams) => {
     return async (req, res, next) => {
+      console.log("🚀 ~ file: sales-policy.js:9 ~ return ~ req:")
       const info = await getSalesClusterInfo(req, res);
+      console.log("🚀 ~ file: sales-policy.js:10 ~ return ~ info:", info)
 
       if (!info.status) {
         return res.status(404).json({
