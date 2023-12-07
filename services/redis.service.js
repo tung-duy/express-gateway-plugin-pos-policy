@@ -1,7 +1,7 @@
 async function getServerRedis({ subdomain, serverId = null }) {
   try {
     const { getModel, redis } = global;
-    const dbKey = `db_${subdomain}`;
+    const dbKey = `${process.env.DB_PREFIX}_${subdomain}`;
     let serverKey = `server_${serverId}`;
     const dbData = await redis.get(dbKey);
     if (dbData) {
@@ -116,7 +116,7 @@ async function getServerBySubdomain(subdomain) {
   const Server = getModel({ model: "Server" });
 
   return new Promise(function (resolve, reject) {
-    const key = `db_${subdomain}`;
+    const key = `${process.env.DB_PREFIX}_${subdomain}`;
     redis.get(key, async function (err, value) {
       if (value) {
         return resolve({
@@ -152,7 +152,7 @@ async function getServerBySubdomain(subdomain) {
         ldBePort: clusterInfo.ldBePort,
         salesBePort: clusterInfo.salesBePort,
       });
-      const key = `db_${subdomain}`;
+      const key = `${process.env.DB_PREFIX}_${subdomain}`;
       redis.set(key, newData);
       return resolve({
         success: true,
