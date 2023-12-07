@@ -9,6 +9,7 @@ module.exports = {
       const info = await getClusterInfo(req, res);
 
       if (!info.status) {
+        console.log("🚀 ~ file: pos-policy.js:12 ~ return ~ info:", info)
         return res.status(401).json({
           message: info.message
         });
