@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getServerBySuffix } = require('../services/redis.service');
 
+router.use("/healthz", require("./healthcheck"));
 router.get('/ping', (req, res, next) => {
   res.json({ name: 'API Gateway service are running...', ping: 'PONG as' });
 });
