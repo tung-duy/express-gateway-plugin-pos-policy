@@ -12,12 +12,11 @@ router.get('/ping', (req, res, next) => {
 
 router.get('/merchant', validateInput(merchantValidation), async (req, res, next) => {
   try {
-    const { domain } = req.params
-      const { address } = await new Promise((rs, rj) => {
-        const a = dns.lookup(domain, (err, address, family) => {
+    const { domain } = req.query;
+      const { address, family } = await new Promise((rs, rj) => {
+        dns.lookup(domain, (err, address, family) => {
           if (err) {
             console.log(`Không thể tìm thấy IP của domain: ${domain}`);
-            console.error(err);
             return rj(err);
           }
         
@@ -30,7 +29,7 @@ router.get('/merchant', validateInput(merchantValidation), async (req, res, next
       })
       
     return res.json({
-      address: address,
+      address,
       ipv: family
     });
   } catch (err) {
